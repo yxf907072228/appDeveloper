@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<body>
+    <head>
+        <meta charset="utf-8" />
+        <script src="./socket.io-client/dist/socket.io.dev.js"></script> 
+       <!-- <script src="./websocket/lib/WebSocketClient.js"></script> -->
+    </head>
+    <body>
+     <!--    <form action="/upload" enctype="multipart/form-data"  method="post">
+            <input type="file" multiple="multiple" name="file1" /><button type="submit">submit</button>
+        </form> -->
+        <button type="butotn" onclick="client.emit('message',new Date().toString())">200</button>
+        <button type="butotn" onclick="ws.send(123)">101</button>
+        
+    </body>    
+    <script>
+         (function iframelongconnect(){
+             var iframe = document.createElement('iframe')
+             iframe.setAttribute('src','http://localhost:3000/event_source')
+             iframe.setAttribute('id','f1')
+             
+            // iframe.style.display = 'none'
+             iframe.onload=function(e){
+                console.log('load!')
+             }
+             document.body.appendChild(iframe)
+             var d1 = document.createElement('div')
+             document.body.appendChild(d1)
+             setInterval(function(){
+                 var str = ''
+                 if(iframe.document){
+                    try{
+                        console.log(iframe.contentDocument.body.innerText)
+                    }catch(e){
+                        console.log(e)
+                    }
+                    // str = iframe.document.body.innerHTML
+                 }else{
+                    console.log(iframe.contentDocument.getElementsByName('info').length)
+                     str = iframe.contentDocument.body.innerText
+                 }
+      
+                // d1.innerHTML = str
+               //  iframe.contentDocument.body.innerHTML=""
+             },2000)
+         })()
+/* 
+            let ws=new WebSocket('ws://localhost:4000/socket.io/?EIO=3&transport=websocket&sid='+1)
+            ws.onopen=(e)=>{
+                console.log('open', e)
+            }
+            ws.onmessage=(e)=>{
+                console.log('message', e)
+            }
+ *//* 
+            let chat = new EventSource("/event_source");
+            chat.onmessage = function (event) {
+                let msg = event.data;
+                console.log(msg,'1')
+              //  $(".list-group").append("<li class='list-group-item'>" + msg + "</li>");
+               //  chat.close(); //关闭server-sent event
+            };
+
+            // 自定义事件
+            chat.addEventListener("myChatEvent", function (event) {
+                let msg = event.data;
+                console.log(msg,'2')
+                //$(".list-group").append("<li class='list-group-item'>" + msg + "</li>");
+            });
+ */
+       /* const client = io.connect('localhost:3000/')
+       client.emit('message','hello')
+       client.on('message',()=>{
+           console.log(arguments)
+       })
+     */
+      /*  const ws
+       fetch('http://localhost:3000/socket.io/?EIO=3&transport=polling&t=MCW3Mq-').then((res)=>{
+           return res.text()
+       }).then((res)=>{
+            let sid = JSON.parse(res.match(/\{.*\}/)[0]).sid
+
+            
+
+            ws=new WebSocket('ws://localhost:3000/socket.io/?EIO=3&transport=websocket&sid='+sid)
+            ws.onopen=(e)=>{
+                console.log('open', e)
+
+            }
+            ws.onmessage=(e)=>{
+                console.log('message', e)
+            }
+       }) */
+     /*const ws=new WebSocket('ws://localhost:8080/')
+       ws.onopen=(e)=>{
+        console.log('open', e)
+
+       }
+
+       ws.onmessage=(e)=>{
+        console.log('message', e)
+       }
+
+       ws.onclose=(e)=>{
+        console.log('close', e)
+       } */
+/* 
+       var client = new WebSocketClient();
+       client.on("connect",(connection)=>{
+        console.log('connect')
+       }) */
+
+
+    </script>
+</body>

@@ -1,0 +1,30 @@
+{
+  "name": "appdeveloper",
+  "version": "1.0.0",
+  "description": "''",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./servers/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yxf907072228/appDeveloper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yxf907072228/appDeveloper/issues"
+  },
+  "homepage": "https://github.com/yxf907072228/appDeveloper#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.17.3",
+    "socket.io": "^2.1.0",
+    "websocket": "^1.0.26"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.2",
+    "busboy": "^0.2.14"
+  }
+}
