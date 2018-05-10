@@ -72,7 +72,7 @@ const server = app.listen(3000)
 //服务器程序
 var crypto = require('crypto');
 var WS = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-require('net').createServer(function(o){
+/* require('net').createServer(function(o){
     var key;
     o.on('data',function(e){
         if(!key){
@@ -96,4 +96,4 @@ require('net').createServer(function(o){
  
         
   
-}).listen(4000);
+}).listen(4000); */

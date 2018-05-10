@@ -9,17 +9,17 @@
      <!--    <form action="/upload" enctype="multipart/form-data"  method="post">
             <input type="file" multiple="multiple" name="file1" /><button type="submit">submit</button>
         </form> -->
-        <button type="butotn" onclick="client.emit('message',new Date().toString())">200</button>
-        <button type="butotn" onclick="ws.send(123)">101</button>
-        
+       <!--  <button type="butotn" onclick="client.emit('message',new Date().toString())">200</button>
+        <button type="butotn" onclick="console.log(document.getElementById('f1').contentWindow.document.readyState)">101</button>
+        <iframe id="f1" src="http://10.91.7.45:6969/register/123321"></iframe> -->
     </body>    
     <script>
          (function iframelongconnect(){
              var iframe = document.createElement('iframe')
-             iframe.setAttribute('src','http://localhost:3000/event_source')
+             iframe.setAttribute('src','http://10.91.7.45:3000/event_source')
              iframe.setAttribute('id','f1')
              
-            // iframe.style.display = 'none'
+             iframe.style.display = 'none'
              iframe.onload=function(e){
                 console.log('load!')
              }
@@ -27,23 +27,26 @@
              var d1 = document.createElement('div')
              document.body.appendChild(d1)
              setInterval(function(){
-                 var str = ''
-                 if(iframe.document){
+                 var str = '',body=null
+                 if(iframe.contentWindow){
                     try{
-                        console.log(iframe.contentDocument.body.innerText)
+                        body = iframe.contentWindow.document.body
+                        str=iframe.contentWindow.document.body.innerText
                     }catch(e){
-                        console.log(e)
+                      //  console.log(e)
                     }
-                    // str = iframe.document.body.innerHTML
                  }else{
-                    console.log(iframe.contentDocument.getElementsByName('info').length)
+                     body = iframe.contentDocument.body
                      str = iframe.contentDocument.body.innerText
                  }
       
-                // d1.innerHTML = str
-               //  iframe.contentDocument.body.innerHTML=""
+                 d1.innerHTML = str || 123
+                 if(body){
+                    body.innerHTML = ''
+                 }
+                 
              },2000)
-         })()
+         })
 /* 
             let ws=new WebSocket('ws://localhost:4000/socket.io/?EIO=3&transport=websocket&sid='+1)
             ws.onopen=(e)=>{
@@ -113,3 +116,34 @@
 
     </script>
 </body>
+<script>
+  /*  let template = {
+                    "alarm_sample": 1,
+                    "alarm_sip": "37.153.119.1",
+                    "alarm_sip_host": "37.153.119.1",
+                    "alarm_source": 2,
+                    "attack_chain": "0x03090000",
+                    "attack_host": "66.55.90.2",
+                    "attack_ip": "66.55.90.2",
+                    "attack_org": "",
+                    "attack_phase_name": "\u547d\u4ee4\u63a7\u5236",
+                    "attack_phase_sub_name": "\u6df7\u5408\u529f\u80fd\u63a7\u5236",
+                    "attack_sip": "66.55.90.17",
+                    "attack_type": "\u8fdc\u63a7\u6728\u9a6c"
+                   
+                }
+    let list = []
+
+    for(let i=0;i<4000;i++){
+      list.push(
+        Object.assign({},template,{
+          "alarm_sip": "37.153.119.1"+i,
+          "alarm_sip_host": "37.153.119.1"+i,
+          "attack_host": "66.55.90.2"+(i+1),
+          "attack_ip": "66.55.90.2" + (i+1)
+        })
+      )
+    }
+
+    console.log(JSON.stringify(list,'',2)) */
+</script>
