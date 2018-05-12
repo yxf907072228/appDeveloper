@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-
+import AppService from '../services/AppService'
 @Component({
     selector:'page1_1',
     template:`
@@ -9,5 +9,7 @@ import {Component} from '@angular/core'
     `
 })
 export default class Page1_1{
-
+    constructor(appService:AppService){
+        console.log(appService)
+    }
 }
