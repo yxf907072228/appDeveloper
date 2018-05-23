@@ -1,5 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
@@ -12,6 +13,9 @@ import Page1_2 from './pages/Page1_2'
 
 import Page2 from './pages/Page2'
 
+import AppService from './services/AppService'
+
+import Module2 from './module2/app.module2'
 
 const routes: Routes = [
     { path: '', redirectTo: '/page1', pathMatch: 'full' },
@@ -33,11 +37,14 @@ const routes: Routes = [
         Page2
     ],
     imports: [
+        HttpModule,
         BrowserModule,
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes),
+        Module2
     ],
     providers: [
-        { provide: APP_BASE_HREF, useValue: '/' }
+        { provide: APP_BASE_HREF, useValue: '/' },
+        AppService
     ]
 })
 export class MainModule {
