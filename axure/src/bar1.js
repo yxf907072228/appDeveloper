@@ -1,19 +1,6 @@
-     
-import echarts from 'echarts/dist/echarts.js'
-
-(function(){
-    window.$axure.internal(function($ax){
-        let repeat , box;
-        $ax('*').each(function(diagramObject, elementId) {
-            if ($ax.public.fn.IsRepeater(diagramObject.type)) {
-                repeat = $('#'+elementId)
-            }else if(diagramObject.friendlyType == '矩形' ||  diagramObject.friendlyType == 'Rectangle'){
-                box =  $('#'+elementId)
-            }
-           
-        })
-
-        var myChart = echarts.init(box[0]);
+import echarts from 'echarts/dist/echarts.js' 
+export default function(group){
+    var myChart = echarts.init(group.box);
         // 指定图表的配置项和数据
         var option = {
             tooltip : {
@@ -48,7 +35,7 @@ import echarts from 'echarts/dist/echarts.js'
                     },
                     axisLabel: {
                         textStyle: {
-                            color: '#ddd'
+                                            color: '#ddd'
                         }
                     }
                 }
@@ -130,7 +117,4 @@ import echarts from 'echarts/dist/echarts.js'
         // 使用刚指定的配置项和数据显示图表。
         
         myChart.setOption(option); 
-    })
-
- 
-})()
+}
