@@ -90241,7 +90241,6 @@ exports.env = env$1;
             }else if(diagramObject.friendlyType == '矩形' ||  diagramObject.friendlyType == 'Rectangle'){
                 box =  $('#'+elementId);
             }
-           
         });
 
         var myChart = echarts.init(box[0]);

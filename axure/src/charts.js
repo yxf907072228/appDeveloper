@@ -2,12 +2,15 @@
 import echarts from 'echarts/dist/echarts.js' 
 import line1 from './line1'
 import bar1 from './bar1'
+import bar2 from './bar2'
 import map1 from './map1'
+import progress1 from './progress1'
+import funnel1 from './funnel1'
 
 
 (function () {
     let groups ={} , box={}, repeaters={}
-    const chartTypes=['schart-bar1','schart-line1','schart-map1']
+    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1']
     window.$axure.internal(function ($ax) {
         initChartsData($ax)
         console.log(groups, box, repeaters)
@@ -20,25 +23,29 @@ import map1 from './map1'
             if(chartTypes.indexOf(diagramObject.label)!=-1){
                 
                 let {friendlyType:type, objs} = diagramObject
+                
                 switch(type){
+                    case 'Group':;
                     case '组合':
                         let group = groups[diagramObject.id]={
                             label: diagramObject.label,
                             domId:elementId
                         }
                         objs.map((item)=>{
-                            if(item.friendlyType=='中继器'){
+                            if(item.friendlyType=='中继器' || item.friendlyType=='Repeater' ){
                                 group.repeater = item.id
-                            }else if(item.friendlyType=='矩形'){
+                            }else if(item.friendlyType=='矩形' || item.friendlyType=='Rectangle'){
                                 group.box = item.id
                             }
                         })
 
                     ;break;
+                    case 'Repeater':;
                     case '中继器':
                         diagramObject.domId = elementId
                         repeaters[diagramObject.id] = diagramObject
                     ;break;
+                    case 'Rectangle':;
                     case '矩形':
                         box[diagramObject.id] = document.querySelector(`#${elementId}`)
                     ;break;
@@ -72,9 +79,21 @@ import map1 from './map1'
             case 'schart-bar1':
              bar1(group)
             ;break;
+            case 'schart-bar2':
+             bar2(group)
+            ;break;
+            
             case 'schart-map1':
              map1(group)
             ;break;
+            case 'schart-progress1':
+             progress1(group)
+            ;break;
+            case 'schart-funnel1':
+            funnel1(group)
+           ;break;
+            
+
         }
     }
 

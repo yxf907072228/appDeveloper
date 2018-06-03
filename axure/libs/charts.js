@@ -90450,6 +90450,76 @@ function bar1(group){
         myChart.setOption(option); 
 }
 
+function bar2(group){
+    var myChart = echarts.init(group.box);
+        // 指定图表的配置项和数据
+        var option = {
+            color: ['#3398DB'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '3%',
+                
+                containLabel: true
+            },
+            yAxis : [
+                {
+                    type : 'category',
+                    data : ['第五名', '第四名', '第三名', '第二名', '第一名'],
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        textStyle: {
+                                            color: '#ddd'
+                        }
+                    }
+                }
+            ],
+            xAxis : [
+                {
+                    type : 'value',
+                    axisLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        textStyle: {
+                                            color: '#ddd'
+                        }
+                    }
+                }
+            ],
+            series : [
+                {
+                    name:'直接访问',
+                    type:'bar',
+                    barWidth: '60%',
+                    data:[10, 52, 200, 334, 390]
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        
+        myChart.setOption(option); 
+}
+
 function map1(group){
     var myChart = echarts.init(group.box);
        
@@ -90529,9 +90599,141 @@ function map1(group){
         myChart.setOption(option);
 }
 
+function progress1(group){
+    var myChart = echarts.init(group.box);
+
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        color:['blue','#c7c3c34f','transparent'],
+        title: {
+            text: '天气情况统计',
+            left: 'center',
+            bottom:'10%',
+            textStyle:{
+                fontSize:12,
+                color:'#fff'
+            }
+        },
+        series: [
+            {
+                name:'访问来源',
+                type:'pie',
+                startAngle:180,
+                radius: ['70%', '100%'],
+                center:['50%','60%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false
+                    },
+                    emphasis: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:10, name:'10%',label: {
+                    normal: {
+                        show: true,
+                        position: 'center',
+                        padding: [0, 0, 20, 0],
+                        textStyle: {
+                           // fontSize: '100',
+                            fontWeight: 'bold',
+                            color: '#fff'
+                        }
+                    }
+                }},
+                    {value:90, name:'邮件营销'},
+                    {value:100, name:'联盟广告'}
+                ]
+            }
+        ]
+    };
+    myChart.setOption(option);
+}
+
+/* app.title = '环形图';
+
+
+ */
+
+function funnel1(group){
+    var myChart = echarts.init(group.box);
+        // 指定图表的配置项和数据
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c}%"
+            },
+            legend: {
+                data: ['展现','点击','访问','咨询','订单'],
+                textStyle:{color:'#fff'},
+            },
+            calculable: true,
+            series: [
+                {
+                    name:'漏斗图',
+                    type:'funnel',
+                    left: '10%',
+                    top: 60,
+                    //x2: 80,
+                    bottom: 60,
+                    width: '80%',
+                    // height: {totalHeight} - y - y2,
+                    min: 0,
+                    max: 100,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        },
+                        emphasis: {
+                            textStyle: {
+                                fontSize: 20
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            length: 10,
+                            lineStyle: {
+                                width: 1,
+                                type: 'solid'
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        }
+                    },
+                    data: [
+                        {value: 60, name: '访问'},
+                        {value: 40, name: '咨询'},
+                        {value: 20, name: '订单'},
+                        {value: 80, name: '点击'},
+                        {value: 100, name: '展现'}
+                    ]
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        
+        myChart.setOption(option); 
+}
+
 (function () {
     let groups ={} , box={}, repeaters={};
-    const chartTypes=['schart-bar1','schart-line1','schart-map1'];
+    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1'];
     window.$axure.internal(function ($ax) {
         initChartsData($ax);
         console.log(groups, box, repeaters);
@@ -90544,25 +90746,29 @@ function map1(group){
             if(chartTypes.indexOf(diagramObject.label)!=-1){
                 
                 let {friendlyType:type, objs} = diagramObject;
+                
                 switch(type){
+                    case 'Group':
                     case '组合':
                         let group = groups[diagramObject.id]={
                             label: diagramObject.label,
                             domId:elementId
                         };
                         objs.map((item)=>{
-                            if(item.friendlyType=='中继器'){
+                            if(item.friendlyType=='中继器' || item.friendlyType=='Repeater' ){
                                 group.repeater = item.id;
-                            }else if(item.friendlyType=='矩形'){
+                            }else if(item.friendlyType=='矩形' || item.friendlyType=='Rectangle'){
                                 group.box = item.id;
                             }
                         })
 
                     ;break;
+                    case 'Repeater':
                     case '中继器':
                         diagramObject.domId = elementId;
                         repeaters[diagramObject.id] = diagramObject
                     ;break;
+                    case 'Rectangle':
                     case '矩形':
                         box[diagramObject.id] = document.querySelector(`#${elementId}`)
                     ;break;
@@ -90596,9 +90802,21 @@ function map1(group){
             case 'schart-bar1':
              bar1(group)
             ;break;
+            case 'schart-bar2':
+             bar2(group)
+            ;break;
+            
             case 'schart-map1':
              map1(group)
             ;break;
+            case 'schart-progress1':
+             progress1(group)
+            ;break;
+            case 'schart-funnel1':
+            funnel1(group)
+           ;break;
+            
+
         }
     }
 
