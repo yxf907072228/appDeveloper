@@ -6,11 +6,16 @@ import bar2 from './bar2'
 import map1 from './map1'
 import progress1 from './progress1'
 import funnel1 from './funnel1'
+import header1 from './header1'
+import header2 from './header2'
+import panel1 from './panel1'
+
+
 
 
 (function () {
     let groups ={} , box={}, repeaters={}
-    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1']
+    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1','schart-header1','schart-header2','schart-panel1']
     window.$axure.internal(function ($ax) {
         initChartsData($ax)
         console.log(groups, box, repeaters)
@@ -92,6 +97,18 @@ import funnel1 from './funnel1'
             case 'schart-funnel1':
             funnel1(group)
            ;break;
+           case 'schart-header1':
+           header1(group)
+          ;break;
+          case 'schart-header2':
+          header2(group)
+          ;break;
+          case 'schart-panel1':
+          panel1(group)
+          ;break;
+            
+         
+          
             
 
         }

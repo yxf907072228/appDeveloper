@@ -3,15 +3,14 @@ export default function(group){
     var myChart = echarts.init(group.box);
         // 指定图表的配置项和数据
         var option = {
-                   
                    color:['red','orange','yellow','#00f6ff','green'],
                    tooltip: {
                        trigger: 'axis'
                    },
                    legend: {
-                       data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎'],
+                       data:[{name:'邮件营销',icon:'emptyCircle'},{name:'联盟广告',icon:'emptyCircle'},{name:'视频广告',icon:'emptyCircle'},{name:'直接访问',icon:'emptyCircle'},{name:'搜索引擎',icon:'emptyCircle'}],
                        textStyle:{
-                           fontSize:8,
+                           fontSize:12,
                            color:'#fff'
                        },
                        itemWidth:8,
