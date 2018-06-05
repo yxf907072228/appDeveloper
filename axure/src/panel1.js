@@ -1,7 +1,7 @@
 import utils from './utils.js'
 export default function(group){
     console.log('头部容器',group.box,group.repeater)
-    let params = utils.getParams(group.repeater)
+    let params = utils.getParams(group.repeater[0])
     
      Object.assign(group.box.style,{
         'background-color': '#08274c94',

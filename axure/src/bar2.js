@@ -21,7 +21,7 @@ export default function(group){
             yAxis : [
                 {
                     type : 'category',
-                    data : ['第五名', '第四名', '第三名', '第二名', '第一名'],
+                    data : ['木马攻击', '漏洞利用', '恶意文件传播', '其他攻击', '木马深度分析'],
                     axisTick: {
                         alignWithLabel: true
                     },

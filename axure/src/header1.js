@@ -3,7 +3,7 @@ import utils from './utils.js'
 export default function(group){
     console.log('头部容器',group.box,group.repeater)
  
-    let params = utils.getParams(group.repeater)
+    let params = utils.getParams(group.repeater[0])
 
      Object.assign(group.box.style,{
         'background-color': '#08274c94',
@@ -22,13 +22,13 @@ export default function(group){
  
     <span class="header-logo" style="position: absolute;color: #666; font-weight: 900; left: 5px;top: 5px;">${params.logo || 'logo'}</span>
     <span class="header-title" style="position: absolute;color: #fff;font-weight: 900; left: 5px;bottom: 5px;font-size: 18px;">${params.title || '标题文字'}</span>
-    <ul style="list-style: none; display: block;line-height: 50px;padding: 0px;margin: 0px;position: absolute;right: 200px;">
+    <ul style="list-style: none; display: block;line-height: 50px;padding: 0px;margin: 0px;position: absolute;right: 220px;">
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">1天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">7天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">14天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">30天</li>
     </ul>
-    <div class="header-clock" style="position: absolute;right: 80px;font-size: 30px;color: #fff;font-weight: bolder;line-height: 50px;"></div>
+    <div class="header-clock" style="position: absolute;right: 100px;font-size: 30px;color: #fff;font-weight: bolder;line-height: 50px;"></div>
     <div class="header-date" style="position: absolute;right: 5px;top:7px;font-size: 13px;color: #fff;font-weight: bolder; "></div>
     <div class="header-week" style="position: absolute;right: 5px;bottom:7px;font-size: 14px;color: #fff;font-weight: bolder; ">tuesday</div>
     

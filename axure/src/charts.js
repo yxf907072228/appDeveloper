@@ -1,6 +1,7 @@
 
 import echarts from 'echarts/dist/echarts.js' 
 import line1 from './line1'
+import pie1 from './pie1'
 import bar1 from './bar1'
 import bar2 from './bar2'
 import map1 from './map1'
@@ -9,13 +10,25 @@ import funnel1 from './funnel1'
 import header1 from './header1'
 import header2 from './header2'
 import panel1 from './panel1'
+import panel2 from './panel2'
 
-
+import tapu1 from './tapu1'
+import gauge1 from './gauge1'
 
 
 (function () {
     let groups ={} , box={}, repeaters={}
-    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1','schart-header1','schart-header2','schart-panel1']
+    const chartTypes=[
+        'schart-bar1','schart-bar2',
+        'schart-pie1',
+        'schart-line1','schart-map1',
+        'schart-progress1',
+        'schart-funnel1',
+        'schart-header1','schart-header2',
+        'schart-panel1','schart-panel2',
+        'schart-tapu1',
+        'schart-gauge1'
+    ]
     window.$axure.internal(function ($ax) {
         initChartsData($ax)
         console.log(groups, box, repeaters)
@@ -34,11 +47,12 @@ import panel1 from './panel1'
                     case '组合':
                         let group = groups[diagramObject.id]={
                             label: diagramObject.label,
+                            repeater:[],
                             domId:elementId
                         }
                         objs.map((item)=>{
                             if(item.friendlyType=='中继器' || item.friendlyType=='Repeater' ){
-                                group.repeater = item.id
+                                group.repeater.push(item.id)
                             }else if(item.friendlyType=='矩形' || item.friendlyType=='Rectangle'){
                                 group.box = item.id
                             }
@@ -69,7 +83,9 @@ import panel1 from './panel1'
         Object.keys(groups).map((key)=>{
             let group = groups[key]
             group.box = box[group.box]
-            group.repeater = repeaters[group.repeater]
+            group.repeater = group.repeater.map((id)=>{
+                return repeaters[id]
+            })
             renderChart(group)
         })
 
@@ -81,6 +97,9 @@ import panel1 from './panel1'
             case 'schart-line1':
              line1(group)
             ;break;
+            case 'schart-pie1':
+             pie1(group)
+            ;break;
             case 'schart-bar1':
              bar1(group)
             ;break;
@@ -90,6 +109,9 @@ import panel1 from './panel1'
             
             case 'schart-map1':
              map1(group)
+            ;break;
+            case 'schart-tapu1':
+             tapu1(group)
             ;break;
             case 'schart-progress1':
              progress1(group)
@@ -106,8 +128,15 @@ import panel1 from './panel1'
           case 'schart-panel1':
           panel1(group)
           ;break;
-            
+          case 'schart-panel2':
+          panel2(group)
+          ;break;
+          case 'schart-gauge1':
+          gauge1(group)
+          ;break;
          
+
+          
           
             
 

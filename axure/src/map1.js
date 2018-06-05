@@ -5,9 +5,13 @@ export default function (group) {
 
     var option = {
         tooltip: {},
-
         geo: {
             map: 'china',
+            top:10,
+            left:10,
+            bottom:10,
+            right:10,
+            roam: true,
             roam: true,
             label: {
                 normal: {

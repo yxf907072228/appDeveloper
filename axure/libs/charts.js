@@ -90232,21 +90232,80 @@ exports.env = env$1;
 //# sourceMappingURL=echarts.js.map
 });
 
+const getParams = function(repeater){
+    let params = {};
+    let { data } = repeater;
+    data.map((item)=>{
+        if(item.value){
+            params[item.key.text] = item.value.text;
+        }
+    });
+    return params
+};
+const getDatas= function(repeater){
+    let params = {};
+    let { data } = repeater;
+    data.map((item)=>{
+        if(item.value){
+            params[item.key.text] = item.value.text.split(',');
+        }
+    });
+    return params
+};
+
+var utils = {
+    getParams,
+    getDatas
+}
+
+var config = {
+    color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3']
+}
+
 function line1(group){
+    
     var myChart = echarts.init(group.box);
+    let params = utils.getParams(group.repeater[0]);
+    let datas = utils.getDatas(group.repeater[1]);
+    const colors = getColor(params.colors);
+    console.log(datas);
+    function getColor(color){
+        if(color&&color.length){
+            return color.split(',')
+        }else{
+            return config.color
+        }
+    }
+
+    function getLegendData(){
+        return Object.keys(datas).map((key,index)=>{
+            return {name: key,icon:'circle',textStyle:{color:colors[index]}}
+        })
+    }
+
+    function getSeries(){
+        return Object.keys(datas).map((key,index)=>{
+            return {
+                name:key,
+                type:'line',
+                data:datas[key]
+            }
+        })
+    }
+
         // 指定图表的配置项和数据
         var option = {
-                   color:['red','orange','yellow','#00f6ff','green'],
+                   color:colors,
                    tooltip: {
                        trigger: 'axis'
                    },
                    legend: {
-                       data:[{name:'邮件营销',icon:'emptyCircle'},{name:'联盟广告',icon:'emptyCircle'},{name:'视频广告',icon:'emptyCircle'},{name:'直接访问',icon:'emptyCircle'},{name:'搜索引擎',icon:'emptyCircle'}],
+                       data:getLegendData(),
                        textStyle:{
-                           fontSize:12,
-                           color:'#fff'
+                           fontSize:12
+                           
                        },
-                       itemWidth:8,
+                       itemWidth:6,
                        top:10
                    },
                    grid: {
@@ -90259,7 +90318,7 @@ function line1(group){
                    xAxis : [
                        {
                            type : 'category',
-                           data : ['11-9','11-21','11-23','11-25'],
+                           data : params.xAxis?params.xAxis.split(','):[],
                            axisLine: {
                                show: false
                            },
@@ -90273,8 +90332,7 @@ function line1(group){
                            }
                        }
                    ],
-                   yAxis : [
-                       {
+                   yAxis :  {
                            type : 'value',
                            axisLine: {
                                show: false
@@ -90288,45 +90346,79 @@ function line1(group){
                                }
                            }
                        }
-                   ],
-                   series: [
-                       {
-                           name:'邮件营销',
-                           type:'line',
-                           stack: '总量',
-                           data:[120, 132, 101, 134, 90, 230, 210]
-                       },
-                       {
-                           name:'联盟广告',
-                           type:'line',
-                           stack: '总量',
-                           data:[220, 182, 191, 234, 290, 330, 310]
-                       },
-                       {
-                           name:'视频广告',
-                           type:'line',
-                           stack: '总量',
-                           data:[150, 232, 201, 154, 190, 330, 410]
-                       },
-                       {
-                           name:'直接访问',
-                           type:'line',
-                           stack: '总量',
-                           data:[320, 332, 301, 334, 390, 330, 320]
-                       },
-                       {
-                           name:'搜索引擎',
-                           type:'line',
-                           stack: '总量',
-                           data:[820, 932, 901, 934, 1290, 1330, 1320]
-                       }
-                   ]
+                   ,
+                   series: getSeries()
                };  
 
         
 
+               console.log(option);
 
         myChart.setOption(option);
+}
+
+function pie1(group){
+    var myChart = echarts.init(group.box);
+        // 指定图表的配置项和数据 违规、异常、攻击、漏洞
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            color:['#bd53ffc9','#07cdffd1','#09e813c7','#fd7512d6','#ffe303b5'],
+            legend: {
+                show:true,
+                
+                bottom:5,
+                data:[
+                    {name:'违规',icon:'circle',textStyle:{color:'#bd53ffc9'}},
+                    {name:'异常',icon:'circle',textStyle:{color:'#07cdffd1'}},
+                    {name:'攻击',icon:'circle',textStyle:{color:'#09e813c7'}},
+                    {name:'漏洞',icon:'circle',textStyle:{color:'#fd7512d6'}}
+                ]
+            },
+            grid:{
+                top:20
+            },
+            series: [
+                {
+                    name:'告警',
+                    type:'pie',
+         
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {value:335, name:'违规'},
+                        {value:310, name:'异常'},
+                        {value:234, name:'攻击'},
+                        {value:135, name:'漏洞'}
+                        
+                    ]
+                }
+            ]
+        };
+        
+
+        // 使用刚指定的配置项和数据显示图表。
+        
+        myChart.setOption(option); 
 }
 
 function bar1(group){
@@ -90471,7 +90563,7 @@ function bar2(group){
             yAxis : [
                 {
                     type : 'category',
-                    data : ['第五名', '第四名', '第三名', '第二名', '第一名'],
+                    data : ['木马攻击', '漏洞利用', '恶意文件传播', '其他攻击', '木马深度分析'],
                     axisTick: {
                         alignWithLabel: true
                     },
@@ -90525,9 +90617,13 @@ function map1 (group) {
 
     var option = {
         tooltip: {},
-
         geo: {
             map: 'china',
+            top:10,
+            left:10,
+            bottom:10,
+            right:10,
+            roam: true,
             roam: true,
             label: {
                 normal: {
@@ -90933,24 +91029,10 @@ function funnel1(group){
         myChart.setOption(option); 
 }
 
-const getParams = function(repeater){
-    let params = {};
-    let { data } = repeater;
-    data.map((item)=>{
-        if(item.value){
-            params[item.key.text] = item.value.text;
-        }
-    });
-    return params
-};
-var utils = {
-    getParams
-}
-
 function header1(group){
     console.log('头部容器',group.box,group.repeater);
  
-    let params = utils.getParams(group.repeater);
+    let params = utils.getParams(group.repeater[0]);
 
      Object.assign(group.box.style,{
         'background-color': '#08274c94',
@@ -90969,13 +91051,13 @@ function header1(group){
  
     <span class="header-logo" style="position: absolute;color: #666; font-weight: 900; left: 5px;top: 5px;">${params.logo || 'logo'}</span>
     <span class="header-title" style="position: absolute;color: #fff;font-weight: 900; left: 5px;bottom: 5px;font-size: 18px;">${params.title || '标题文字'}</span>
-    <ul style="list-style: none; display: block;line-height: 50px;padding: 0px;margin: 0px;position: absolute;right: 200px;">
+    <ul style="list-style: none; display: block;line-height: 50px;padding: 0px;margin: 0px;position: absolute;right: 220px;">
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">1天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">7天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">14天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">30天</li>
     </ul>
-    <div class="header-clock" style="position: absolute;right: 80px;font-size: 30px;color: #fff;font-weight: bolder;line-height: 50px;"></div>
+    <div class="header-clock" style="position: absolute;right: 100px;font-size: 30px;color: #fff;font-weight: bolder;line-height: 50px;"></div>
     <div class="header-date" style="position: absolute;right: 5px;top:7px;font-size: 13px;color: #fff;font-weight: bolder; "></div>
     <div class="header-week" style="position: absolute;right: 5px;bottom:7px;font-size: 14px;color: #fff;font-weight: bolder; ">tuesday</div>
     
@@ -91000,6 +91082,7 @@ function header1(group){
 
 function header2(group){
     console.log('头部容器',group.box);
+    let params = utils.getParams(group.repeater[0]);
      Object.assign(group.box.style,{
         'background-color': '#08274c94',
         'border-bottom':' 1px solid #66666640',
@@ -91028,7 +91111,7 @@ function header2(group){
     width: 400px;
     background-size: 100%;
     background-image: url('data:image/svg+xml;base64,PHN2ZyBpZD0ibG9nb+WvueivneahhiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjYxOSIgaGVpZ2h0PSIxMDgiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEsIC5jbHMtMiwgLmNscy0zIHsKICAgICAgICBmaWxsLXJ1bGU6IGV2ZW5vZGQ7CiAgICAgIH0KCiAgICAgIC5jbHMtMSB7CiAgICAgICAgb3BhY2l0eTogMC43NTsKICAgICAgICBmaWxsOiB1cmwoI2xpbmVhci1ncmFkaWVudCk7CiAgICAgIH0KCiAgICAgIC5jbHMtMiwgLmNscy0zIHsKICAgICAgICBmaWxsOiAjNTVmM2ZkOwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbHRlcjogdXJsKCNmaWx0ZXIpOwogICAgICB9CgogICAgICAuY2xzLTMgewogICAgICAgIGZpbHRlcjogdXJsKCNmaWx0ZXItMik7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjExMTAiIHkxPSIxODQiIHgyPSIxMTEwIiB5Mj0iMTEwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzE1NDY1YSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwOTIzMjkiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJmaWx0ZXIiIHg9Ijc5OCIgeT0iOTciIHdpZHRoPSI2MTkiIGhlaWdodD0iMTA0IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgcmVzdWx0PSJibHVyIiBzdGREZXZpYXRpb249IjMuMzMzIiBpbj0iU291cmNlQWxwaGEiLz4KICAgICAgPGZlQ29tcG9zaXRlIHJlc3VsdD0iY29tcG9zaXRlIi8+CiAgICAgIDxmZUNvbXBvc2l0ZSByZXN1bHQ9ImNvbXBvc2l0ZS0yIi8+CiAgICAgIDxmZUNvbXBvc2l0ZSByZXN1bHQ9ImNvbXBvc2l0ZS0zIi8+CiAgICAgIDxmZUZsb29kIHJlc3VsdD0iZmxvb2QiIGZsb29kLWNvbG9yPSIjMDA2MGZlIiBmbG9vZC1vcGFjaXR5PSIwLjMiLz4KICAgICAgPGZlQ29tcG9zaXRlIHJlc3VsdD0iY29tcG9zaXRlLTQiIG9wZXJhdG9yPSJpbiIgaW4yPSJjb21wb3NpdGUtMyIvPgogICAgICA8ZmVCbGVuZCByZXN1bHQ9ImJsZW5kIiBtb2RlPSJzY3JlZW4iIGluMj0iU291cmNlR3JhcGhpYyIvPgogICAgICA8ZmVCbGVuZCByZXN1bHQ9ImJsZW5kLTIiIGluPSJTb3VyY2VHcmFwaGljIi8+CiAgICA8L2ZpbHRlcj4KICAgIDxmaWx0ZXIgaWQ9ImZpbHRlci0yIiB4PSIxMDc0IiB5PSIxNjgiIHdpZHRoPSI1OSIgaGVpZ2h0PSIzNyIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHJlc3VsdD0iYmx1ciIgc3RkRGV2aWF0aW9uPSIzLjMzMyIgaW49IlNvdXJjZUFscGhhIi8+CiAgICAgIDxmZUNvbXBvc2l0ZSByZXN1bHQ9ImNvbXBvc2l0ZSIvPgogICAgICA8ZmVDb21wb3NpdGUgcmVzdWx0PSJjb21wb3NpdGUtMiIvPgogICAgICA8ZmVDb21wb3NpdGUgcmVzdWx0PSJjb21wb3NpdGUtMyIvPgogICAgICA8ZmVGbG9vZCByZXN1bHQ9ImZsb29kIiBmbG9vZC1jb2xvcj0iIzAwNjBmZSIgZmxvb2Qtb3BhY2l0eT0iMC4zIi8+CiAgICAgIDxmZUNvbXBvc2l0ZSByZXN1bHQ9ImNvbXBvc2l0ZS00IiBvcGVyYXRvcj0iaW4iIGluMj0iY29tcG9zaXRlLTMiLz4KICAgICAgPGZlQmxlbmQgcmVzdWx0PSJibGVuZCIgbW9kZT0ic2NyZWVuIiBpbjI9IlNvdXJjZUdyYXBoaWMiLz4KICAgICAgPGZlQmxlbmQgcmVzdWx0PSJibGVuZC0yIiBpbj0iU291cmNlR3JhcGhpYyIvPgogICAgPC9maWx0ZXI+CiAgPC9kZWZzPgogIDxwYXRoIGlkPSJMT0dP5qGG6IOM5pmvIiBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzU5LDE1M2wtMTc0LDMxLTM0LTEzSDEwNDZsLTMyLDEzTDg1NywxNTFhNjUuMDU5LDY1LjA1OSwwLDAsMC0xNC0yMmMtOS4wNTctOS41MjEtMjUtMTgtMjUtMThsNTg0LTFzLTE2LjgzLDcuMzM0LTI3LDE4QzEzNjQuNjcsMTM4LjgzMywxMzU5LDE1MywxMzU5LDE1M1oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03OTggLTk3KSIvPgogIDxwYXRoIGlkPSJMT0dP6L655qGGIiBjbGFzcz0iY2xzLTIiIGQ9Ik0xMzk0LDExMXMtMTMuNCw2LjQxLTIxLDE1YTg1LjAzNSw4NS4wMzUsMCwwLDAtMTUsMjRsLTE3MiwzMi0zNC0xM0gxMDQ2bC0zMywxM0w4NjAsMTUwYTcxLjg2OCw3MS44NjgsMCwwLDAtMTMuNTEzLTIwLjUxNEM4MzcuMjQxLDExOS43NDEsODIxLDExMSw4MjEsMTExaC05czIwLjc4Miw5LjcwNiwyOS45LDE5Ljc4N0E2Mi42NDcsNjIuNjQ3LDAsMCwxLDg1NSwxNTNsMTYwLDM0LDMzLTEzaDEwMmwzNCwxMywxNzgtMzRhOTYuMSw5Ni4xLDAsMCwxLDE0LTI0YzcuNTItOS4yNCwyNy0xOCwyNy0xOGgtOVoiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC03OTggLTk3KSIvPgogIDxwYXRoIGlkPSLlsI/mlrnlnZciIGNsYXNzPSJjbHMtMyIgZD0iTTEwODgsMTgyaDMxbC02LDloLTE5WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTc5OCAtOTcpIi8+Cjwvc3ZnPgo=');
-     " >攻击态势分析系统</div>
+     " >${params.title || '标题文字'}</div>
     <ul style="list-style: none; display: block;line-height: 50px;padding: 0px;margin: 0px;position: absolute;right: 80px;">
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">1天</li>
         <li style="font-weight: bolder;width: 50px;float: left;color: #51ade4;" onMouseOver="this.style.color='rgb(59, 76, 210)'" onMouseOut="this.style.color='#51ade4'">7天</li>
@@ -91059,7 +91142,7 @@ function header2(group){
 
 function panel1(group){
     console.log('头部容器',group.box,group.repeater);
-    let params = utils.getParams(group.repeater);
+    let params = utils.getParams(group.repeater[0]);
     
      Object.assign(group.box.style,{
         'background-color': '#08274c94',
@@ -91094,9 +91177,248 @@ function panel1(group){
       
 }
 
+function panel2(group){
+    console.log('头部容器',group.box,group.repeater);
+    let params = utils.getParams(group.repeater[0]);
+    
+     Object.assign(group.box.style,{
+        'background-color': '#08274c94',
+        'border-bottom':' 1px solid #66666640',
+      //  'width': '100%',
+      //  'min-width': '800px',
+        
+        'position': 'relative',
+        'overflow': 'hidden',
+        'display': 'block'
+    }); 
+    
+    
+  
+    group.box.innerHTML=`
+ 
+     
+    <div class="panel-header" style="    background-size: 110%;
+    background-position-y: 36px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGlkPSJzdmciPjxmb3JlaWduT2JqZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkaXYgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGh0bWwiIHN0eWxlPSJ3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyBkaXNwbGF5OiBmbGV4OyBmbGV4LWRpcmVjdGlvbjogcm93OyIgaWQ9InN2Zy1ib2R5Ij48ZGl2IHN0eWxlPSJ3aWR0aDogNTdweDsgYmFja2dyb3VuZDogdXJsKGRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QnBaRDBpNWJlbUlpQjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIZHBaSFJvUFNJMU55SWdhR1ZwWjJoMFBTSXpOeUkrQ2lBZ1BHMWxkR0ZrWVhSaFBqdy9lSEJoWTJ0bGRDQmlaV2RwYmowaTc3dS9JaUJwWkQwaVZ6Vk5NRTF3UTJWb2FVaDZjbVZUZWs1VVkzcHJZemxrSWo4K0NqeDRPbmh0Y0cxbGRHRWdlRzFzYm5NNmVEMGlZV1J2WW1VNmJuTTZiV1YwWVM4aUlIZzZlRzF3ZEdzOUlrRmtiMkpsSUZoTlVDQkRiM0psSURVdU5pMWpNVE00SURjNUxqRTFPVGd5TkN3Z01qQXhOaTh3T1M4eE5DMHdNVG93T1Rvd01TQWdJQ0FnSUNBZ0lqNEtJQ0FnUEhKa1pqcFNSRVlnZUcxc2JuTTZjbVJtUFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eE9UazVMekF5THpJeUxYSmtaaTF6ZVc1MFlYZ3Ribk1qSWo0S0lDQWdJQ0FnUEhKa1pqcEVaWE5qY21sd2RHbHZiaUJ5WkdZNllXSnZkWFE5SWlJdlBnb2dJQ0E4TDNKa1pqcFNSRVkrQ2p3dmVEcDRiWEJ0WlhSaFBnb0tDZ29LQ2dvS0Nnb0tDZ29LQ2dvS0Nnb0tDZ284UDNod1lXTnJaWFFnWlc1a1BTSjNJajgrUEM5dFpYUmhaR0YwWVQ0S1BHUmxabk0rQ2lBZ0lDQThjM1I1YkdVK0NpQWdJQ0FnSUM1amJITXRNU0I3Q2lBZ0lDQWdJQ0FnYjNCaFkybDBlVG9nTURzS0lDQWdJQ0FnZlFvS0lDQWdJQ0FnTG1Oc2N5MHlJSHNLSUNBZ0lDQWdJQ0JtYVd4c09pQWpNamMwTXpSbE93b2dJQ0FnSUNBZ0lHOXdZV05wZEhrNklEQXVPRHNLSUNBZ0lDQWdmUW9LSUNBZ0lDQWdMbU5zY3kweUxDQXVZMnh6TFRNc0lDNWpiSE10TkNCN0NpQWdJQ0FnSUNBZ1ptbHNiQzF5ZFd4bE9pQmxkbVZ1YjJSa093b2dJQ0FnSUNCOUNnb2dJQ0FnSUNBdVkyeHpMVE1nZXdvZ0lDQWdJQ0FnSUdacGJHdzZJQ00wTldFd1kyWTdDaUFnSUNBZ0lIMEtDaUFnSUNBZ0lDNWpiSE10TkNCN0NpQWdJQ0FnSUNBZ1ptbHNiRG9nSXpaalpUbG1aRHNLSUNBZ0lDQWdmUW9nSUNBZ1BDOXpkSGxzWlQ0S0lDQThMMlJsWm5NK0NpQWdQSEpsWTNRZ2FXUTlJdWlEak9hWnIrYWhoaUlnWTJ4aGMzTTlJbU5zY3kweElpQjNhV1IwYUQwaU5UY2lJR2hsYVdkb2REMGlNemNpTHo0S0lDQThjR0YwYUNCcFpEMGk1NEd3TVNJZ1kyeGhjM005SW1Oc2N5MHlJaUJrUFNKTk9UWTNMREkyTUVnNU5UVnNMVGd0T1VnNU1UWjJMVEZvTXpKc09DdzVhREV4SWlCMGNtRnVjMlp2Y20wOUluUnlZVzV6YkdGMFpTZ3RPVEV3SUMweU1qZ3BJaTgrQ2lBZ1BIQmhkR2dnYVdROUl1aVRuVEVpSUdOc1lYTnpQU0pqYkhNdE15SWdaRDBpVFRrMk55d3lOalJvTFRGc0xURXdMVEV3U0RreU4yd3ROeXcxU0RreE1IWXRNV2c1YkRjdE5XZ3pNV3d4TUN3eE1IWXhXaUlnZEhKaGJuTm1iM0p0UFNKMGNtRnVjMnhoZEdVb0xUa3hNQ0F0TWpJNEtTSXZQZ29nSUR4d1lYUm9JR2xrUFNMbm42bmx2YUpmTVYvbWk3Zm90SjFmTWlJZ1pHRjBZUzF1WVcxbFBTTG5uNm5sdmFJZ01TRG1pN2ZvdEowZ01pSWdZMnhoYzNNOUltTnNjeTAwSWlCa1BTSk5PVEUyTGpJMk9Td3lORFZzTlM0ME5UTXNOUzR6TFRVdU5EVXpMRFV1TXkwMUxqUTFNaTAxTGpOYUlpQjBjbUZ1YzJadmNtMDlJblJ5WVc1emJHRjBaU2d0T1RFd0lDMHlNamdwSWk4K0Nqd3ZjM1puUGdvPSkgbm8tcmVwZWF0OyI+PC9kaXY+PGRpdiBzdHlsZT0iZmxleDogMTsgYmFja2dyb3VuZDogdXJsKGRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QnBaRDBpNUxpdElpQjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIZHBaSFJvUFNJeE1pSWdhR1ZwWjJoMFBTSXpOeUkrQ2lBZ1BHMWxkR0ZrWVhSaFBqdy9lSEJoWTJ0bGRDQmlaV2RwYmowaTc3dS9JaUJwWkQwaVZ6Vk5NRTF3UTJWb2FVaDZjbVZUZWs1VVkzcHJZemxrSWo4K0NqeDRPbmh0Y0cxbGRHRWdlRzFzYm5NNmVEMGlZV1J2WW1VNmJuTTZiV1YwWVM4aUlIZzZlRzF3ZEdzOUlrRmtiMkpsSUZoTlVDQkRiM0psSURVdU5pMWpNVE00SURjNUxqRTFPVGd5TkN3Z01qQXhOaTh3T1M4eE5DMHdNVG93T1Rvd01TQWdJQ0FnSUNBZ0lqNEtJQ0FnUEhKa1pqcFNSRVlnZUcxc2JuTTZjbVJtUFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eE9UazVMekF5THpJeUxYSmtaaTF6ZVc1MFlYZ3Ribk1qSWo0S0lDQWdJQ0FnUEhKa1pqcEVaWE5qY21sd2RHbHZiaUJ5WkdZNllXSnZkWFE5SWlJdlBnb2dJQ0E4TDNKa1pqcFNSRVkrQ2p3dmVEcDRiWEJ0WlhSaFBnb0tDZ29LQ2dvS0Nnb0tDZ29LQ2dvS0Nnb0tDZ284UDNod1lXTnJaWFFnWlc1a1BTSjNJajgrUEM5dFpYUmhaR0YwWVQ0S1BHUmxabk0rQ2lBZ0lDQThjM1I1YkdVK0NpQWdJQ0FnSUM1amJITXRNU0I3Q2lBZ0lDQWdJQ0FnYjNCaFkybDBlVG9nTURzS0lDQWdJQ0FnZlFvS0lDQWdJQ0FnTG1Oc2N5MHlJSHNLSUNBZ0lDQWdJQ0JtYVd4c09pQWpNamMwTXpSbE93b2dJQ0FnSUNBZ0lHOXdZV05wZEhrNklEQXVPRHNLSUNBZ0lDQWdmUW9LSUNBZ0lDQWdMbU5zY3kweUxDQXVZMnh6TFRNZ2V3b2dJQ0FnSUNBZ0lHWnBiR3d0Y25Wc1pUb2daWFpsYm05a1pEc0tJQ0FnSUNBZ2ZRb0tJQ0FnSUNBZ0xtTnNjeTB6SUhzS0lDQWdJQ0FnSUNCbWFXeHNPaUFqTkRWaE1HTm1Pd29nSUNBZ0lDQjlDaUFnSUNBOEwzTjBlV3hsUGdvZ0lEd3ZaR1ZtY3o0S0lDQThjbVZqZENCcFpEMGk2SU9NNXBtdjVxR0dJaUJqYkdGemN6MGlZMnh6TFRFaUlIZHBaSFJvUFNJeE1pSWdhR1ZwWjJoMFBTSXpOeUl2UGdvZ0lEeHdZWFJvSUdsa1BTTG5nYkF5SWlCamJHRnpjejBpWTJ4ekxUSWlJR1E5SWswNU56a3NNall3U0RrMk4zWXRNV2d4TW5ZeFdpSWdkSEpoYm5ObWIzSnRQU0owY21GdWMyeGhkR1VvTFRrMk55QXRNakk0S1NJdlBnb2dJRHh3WVhSb0lHbGtQU0xvazUxZk1pSWdaR0YwWVMxdVlXMWxQU0xvazUwZ01pSWdZMnhoYzNNOUltTnNjeTB6SWlCa1BTSk5PVGM1TERJMk0wZzVOamQyTVdneE1pSWdkSEpoYm5ObWIzSnRQU0owY21GdWMyeGhkR1VvTFRrMk55QXRNakk0S1NJdlBnbzhMM04yWno0SykgcmVwZWF0LXg7Ij48L2Rpdj48ZGl2IHN0eWxlPSJ3aWR0aDogMTBweDsgYmFja2dyb3VuZDogdXJsKGRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QnBaRDBpNVkreklpQjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIZHBaSFJvUFNJeE1DSWdhR1ZwWjJoMFBTSXpOeUkrQ2lBZ1BHMWxkR0ZrWVhSaFBqdy9lSEJoWTJ0bGRDQmlaV2RwYmowaTc3dS9JaUJwWkQwaVZ6Vk5NRTF3UTJWb2FVaDZjbVZUZWs1VVkzcHJZemxrSWo4K0NqeDRPbmh0Y0cxbGRHRWdlRzFzYm5NNmVEMGlZV1J2WW1VNmJuTTZiV1YwWVM4aUlIZzZlRzF3ZEdzOUlrRmtiMkpsSUZoTlVDQkRiM0psSURVdU5pMWpNVE00SURjNUxqRTFPVGd5TkN3Z01qQXhOaTh3T1M4eE5DMHdNVG93T1Rvd01TQWdJQ0FnSUNBZ0lqNEtJQ0FnUEhKa1pqcFNSRVlnZUcxc2JuTTZjbVJtUFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eE9UazVMekF5THpJeUxYSmtaaTF6ZVc1MFlYZ3Ribk1qSWo0S0lDQWdJQ0FnUEhKa1pqcEVaWE5qY21sd2RHbHZiaUJ5WkdZNllXSnZkWFE5SWlJdlBnb2dJQ0E4TDNKa1pqcFNSRVkrQ2p3dmVEcDRiWEJ0WlhSaFBnb0tDZ29LQ2dvS0Nnb0tDZ29LQ2dvS0Nnb0tDZ284UDNod1lXTnJaWFFnWlc1a1BTSjNJajgrUEM5dFpYUmhaR0YwWVQ0S1BHUmxabk0rQ2lBZ0lDQThjM1I1YkdVK0NpQWdJQ0FnSUM1amJITXRNU0I3Q2lBZ0lDQWdJQ0FnYjNCaFkybDBlVG9nTURzS0lDQWdJQ0FnZlFvS0lDQWdJQ0FnTG1Oc2N5MHlJSHNLSUNBZ0lDQWdJQ0JtYVd4c09pQWpNamMwTXpSbE93b2dJQ0FnSUNBZ0lHOXdZV05wZEhrNklEQXVPRHNLSUNBZ0lDQWdmUW9LSUNBZ0lDQWdMbU5zY3kweUxDQXVZMnh6TFRNZ2V3b2dJQ0FnSUNBZ0lHWnBiR3d0Y25Wc1pUb2daWFpsYm05a1pEc0tJQ0FnSUNBZ2ZRb0tJQ0FnSUNBZ0xtTnNjeTB6SUhzS0lDQWdJQ0FnSUNCbWFXeHNPaUFqTkRWaE1HTm1Pd29nSUNBZ0lDQjlDZ29nSUNBZ0lDQXVZMnh6TFRRZ2V3b2dJQ0FnSUNBZ0lHWnBiR3c2SUNNMlkyVTVabVE3Q2lBZ0lDQWdJSDBLSUNBZ0lEd3ZjM1I1YkdVK0NpQWdQQzlrWldaelBnb2dJRHh5WldOMElHbGtQU0xvZzR6bW1hL21vWVpmTXlJZ1pHRjBZUzF1WVcxbFBTTG9nNHptbWEvbW9ZWWdNeUlnWTJ4aGMzTTlJbU5zY3kweElpQjNhV1IwYUQwaU1UQWlJR2hsYVdkb2REMGlNemNpTHo0S0lDQThjR0YwYUNCcFpEMGk1NEd3TXlJZ1kyeGhjM005SW1Oc2N5MHlJaUJrUFNKTk1USTNOaXd5TmpCb04zWXRNV2d0TjNZeFdpSWdkSEpoYm5ObWIzSnRQU0owY21GdWMyeGhkR1VvTFRFeU56WWdMVEl5T0NraUx6NEtJQ0E4Y0dGMGFDQnBaRDBpNkpPZE15SWdZMnhoYzNNOUltTnNjeTB6SWlCa1BTSk5NVEkzTml3eU5qUm9OM1l0TVdndE4zWXhXaUlnZEhKaGJuTm1iM0p0UFNKMGNtRnVjMnhoZEdVb0xURXlOellnTFRJeU9Da2lMejRLSUNBOGNtVmpkQ0JwWkQwaTU1K3A1YjJpWHpGZjVvdTM2TFNkWHpZaUlHUmhkR0V0Ym1GdFpUMGk1NStwNWIyaUlERWc1b3UzNkxTZElEWWlJR05zWVhOelBTSmpiSE10TkNJZ2VEMGlOeUlnZVQwaU16UWlJSGRwWkhSb1BTSXpJaUJvWldsbmFIUTlJak1pTHo0S1BDOXpkbWMrQ2c9PSkgbm8tcmVwZWF0OyI+PC9kaXY+PC9kaXY+PC9mb3JlaWduT2JqZWN0Pjwvc3ZnPg==');
+    height: 35px;
+    line-height: 35px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    text-align: left;
+    padding-left: 60px;
+    color: #fff;
+    font-weight: bolder;">${params.title || '默认标题'}</div>
+    
+    `;
+    
+      
+}
+
+function tapu1(group){
+    var myChart = echarts.init(group.box);
+        // 指定图表的配置项和数据 违规、异常、攻击、漏洞
+        var option = {
+            title: {
+                text: 'IT资产安全事件统计',
+                textStyle:{
+                    color:"#fff"
+                }
+            },
+            color:['#3398dbb8'],
+            tooltip: {},
+            animationDurationUpdate: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series : [
+                {
+                    type: 'graph',
+                    layout: 'none',
+                    symbolSize: 50,
+                    roam: true,
+                    label: {
+                        normal: {
+                            show: true
+                        }
+                    },
+                    edgeSymbol: ['circle', 'arrow'],
+                    edgeSymbolSize: [4, 10],
+                    edgeLabel: {
+                        normal: {
+                            textStyle: {
+                                fontSize: 20
+                            }
+                        }
+                    },
+                    data: [{
+                        name: '资产1',
+                        x: 300,
+                        y: 300
+                    }, {
+                        name: '资产2',
+                        x: 800,
+                        y: 300
+                    }, {
+                        name: '资产3',
+                        x: 550,
+                        y: 100
+                    }, {
+                        name: '资产4',
+                        x: 550,
+                        y: 500
+                    }],
+                    // links: [],
+                    links: [{
+                        source: 0,
+                        target: 1,
+                        symbolSize: [5, 20],
+                        label: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                curveness: 0.2
+                            }
+                        }
+                    }, {
+                        source: '节点2',
+                        target: '节点1',
+                        label: {
+                            normal: {
+                                show: true
+                            }
+                        },
+                        lineStyle: {
+                            normal: { curveness: 0.2 }
+                        }
+                    }, {
+                        source: '资产1',
+                        target: '资产3'
+                    }, {
+                        source: '资产2',
+                        target: '资产3'
+                    }, {
+                        source: '资产2',
+                        target: '资产4'
+                    }, {
+                        source: '资产1',
+                        target: '资产4'
+                    }],
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.9,
+                            width: 2,
+                            curveness: 0
+                        }
+                    }
+                }
+            ]
+        };
+        
+
+        // 使用刚指定的配置项和数据显示图表。
+        
+        myChart.setOption(option); 
+}
+
+function gauge1(group){
+    var myChart = echarts.init(group.box);
+        // 指定图表的配置项和数据 违规、异常、攻击、漏洞
+        var option = {
+            tooltip : {
+                formatter: "{a} <br/>{b} : {c}%"
+            },
+            series: [
+                {
+                    name: '业务指标',
+                    radius: '95%',
+                    type: 'gauge',
+                    detail: {formatter:'{value}%'},
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+                            width: 3,
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+                        }
+                    },
+                    axisLabel: {            // 坐标轴小标记
+                        textStyle: {       // 属性lineStyle控制线条样式
+                            fontWeight: 'bolder',
+                            color: '#fff',
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length :15,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto',
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length :25,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            width:3,
+                            color: '#fff',
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+                        }
+                    },
+                    pointer: {           // 分隔线
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 5
+                    },
+                    title : {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 20,
+                            fontStyle: 'italic',
+                            color: '#fff',
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+                        }
+                    },
+                    detail : {
+                        backgroundColor: 'rgba(30,144,255,0.8)',
+                        borderWidth: 1,
+                        borderColor: '#fff',
+                        shadowColor : '#fff', //默认透明
+                        shadowBlur: 5,
+                        offsetCenter: [0, '50%'],       // x, y，单位px
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            color: '#fff'
+                        }
+                    },
+                    data: [{value: 50, name: 'CPU'}]
+                }
+            ]
+        };
+        
+
+        // 使用刚指定的配置项和数据显示图表。
+        
+        myChart.setOption(option); 
+}
+
 (function () {
     let groups ={} , box={}, repeaters={};
-    const chartTypes=['schart-bar1','schart-bar2','schart-line1','schart-map1','schart-progress1','schart-funnel1','schart-header1','schart-header2','schart-panel1'];
+    const chartTypes=[
+        'schart-bar1','schart-bar2',
+        'schart-pie1',
+        'schart-line1','schart-map1',
+        'schart-progress1',
+        'schart-funnel1',
+        'schart-header1','schart-header2',
+        'schart-panel1','schart-panel2',
+        'schart-tapu1',
+        'schart-gauge1'
+    ];
     window.$axure.internal(function ($ax) {
         initChartsData($ax);
         console.log(groups, box, repeaters);
@@ -91115,11 +91437,12 @@ function panel1(group){
                     case '组合':
                         let group = groups[diagramObject.id]={
                             label: diagramObject.label,
+                            repeater:[],
                             domId:elementId
                         };
                         objs.map((item)=>{
                             if(item.friendlyType=='中继器' || item.friendlyType=='Repeater' ){
-                                group.repeater = item.id;
+                                group.repeater.push(item.id);
                             }else if(item.friendlyType=='矩形' || item.friendlyType=='Rectangle'){
                                 group.box = item.id;
                             }
@@ -91150,7 +91473,9 @@ function panel1(group){
         Object.keys(groups).map((key)=>{
             let group = groups[key];
             group.box = box[group.box];
-            group.repeater = repeaters[group.repeater];
+            group.repeater = group.repeater.map((id)=>{
+                return repeaters[id]
+            });
             renderChart(group);
         });
 
@@ -91162,6 +91487,9 @@ function panel1(group){
             case 'schart-line1':
              line1(group)
             ;break;
+            case 'schart-pie1':
+             pie1(group)
+            ;break;
             case 'schart-bar1':
              bar1(group)
             ;break;
@@ -91171,6 +91499,9 @@ function panel1(group){
             
             case 'schart-map1':
              map1(group)
+            ;break;
+            case 'schart-tapu1':
+             tapu1(group)
             ;break;
             case 'schart-progress1':
              progress1(group)
@@ -91187,8 +91518,15 @@ function panel1(group){
           case 'schart-panel1':
           panel1(group)
           ;break;
-            
+          case 'schart-panel2':
+          panel2(group)
+          ;break;
+          case 'schart-gauge1':
+          gauge1(group)
+          ;break;
          
+
+          
           
             
 
